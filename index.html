@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>AnoshGPT - چت با هوش مصنوعی</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      text-align: center;
+      padding: 40px;
+}
+    #chat-box {
+      width: 100%;
+      max-width: 600px;
+      height: 400px;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+      overflow-y: auto;
+      margin: auto;
+}
+.message {
+      margin: 10px 0;
+      text-align: right;
+}
+.user {
+      color: #1e88e5;
+}
+.bot {
+      color: #43a047;
+      text-align: left;
+}
+    #form {
+      margin-top: 20px;
+}
+    input {
+      width: 70%;
+      padding: 10px;
+}
+    button {
+      padding: 10px 15px;
+}
+  </style>
+</head>
+<body>
+  <h2>🤖 خوش آمدی به AnoshGPT</h2>
+  <div id="chat-box"></div>
+  <form id="form">
+    <input type="text" id="msg" placeholder="پیامتو بنویس..." autocomplete="off" />
+    <button type="submit">ارسال</button>
+  </form>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const form = document.getElementById("form");
+    const input = document.getElementById("msg");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const message = input.value.trim();
+      if (!message) return;
+
+      chatBox.innerHTML += `<div class="message user"><strong>شما:</strong> ${message}</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+      input.value = "";
+
+      try {
+        const res = await fetch("https://whatsapp-bot-anosh-webl.onrender.com/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json"},
+          body: JSON.stringify({ message})
+});
+
+        const reply = await res.text();
+        chatBox.innerHTML += `<div class="message bot"><strong>ربات:</strong> ${reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+} catch (err) {
+        chatBox.innerHTML += `<div class="message bot"><strong>ربات:</strong> خطا در ارتباط با سرور 😢</div>`;
+}
+});
+  </script>
+</body>
+</html>
